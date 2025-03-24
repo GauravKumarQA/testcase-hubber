@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Separator } from "@/components/ui/separator";
 import {
   Form,
   FormControl,
@@ -202,29 +203,37 @@ const TestCases = () => {
               ))}
             </div>
           ) : (
-            <div className="divide-y divide-border rounded-md border">
-              {testCases.map((testCase) => (
-                <div key={testCase.id} className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors">
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{testCase.name}</span>
-                      <span className="text-xs text-muted-foreground px-2 py-0.5 bg-secondary rounded-full">
-                        {testCase.enabled ? "Enabled" : "Disabled"}
-                      </span>
+            <div className="rounded-md border">
+              {testCases.map((testCase, index) => (
+                <div key={testCase.id}>
+                  <div className="flex items-center p-4 hover:bg-muted/50 transition-colors">
+                    <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                      <span className="text-sm font-medium">{index + 1}</span>
                     </div>
-                    <div className="text-sm text-muted-foreground">ID: {testCase.id}</div>
-                    {testCase.description && (
-                      <p className="text-sm text-muted-foreground mt-1">{testCase.description}</p>
-                    )}
+                    <div className="flex-grow flex items-center justify-between">
+                      <div className="flex flex-col flex-grow">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{testCase.name}</span>
+                          <span className="text-xs text-muted-foreground px-2 py-0.5 bg-secondary rounded-full">
+                            {testCase.enabled ? "Enabled" : "Disabled"}
+                          </span>
+                        </div>
+                        <div className="text-sm text-muted-foreground">ID: {testCase.id}</div>
+                        {testCase.description && (
+                          <p className="text-sm text-muted-foreground mt-1">{testCase.description}</p>
+                        )}
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 ml-4"
+                        onClick={() => handleDeleteTestCase(testCase.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10 ml-4"
-                    onClick={() => handleDeleteTestCase(testCase.id)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  {index < testCases.length - 1 && <Separator />}
                 </div>
               ))}
             </div>
