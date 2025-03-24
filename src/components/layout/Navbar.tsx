@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { PlayCircle, BarChart2, Clock, Settings } from "lucide-react";
+import { PlayCircle, BarChart2, Clock, Settings, ListCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
@@ -16,6 +16,7 @@ const Navbar = () => {
 
         <nav className="hidden md:flex items-center space-x-1">
           <NavLink to="/" icon={<BarChart2 className="w-4 h-4" />} label="Dashboard" exact />
+          <NavLink to="/test-cases" icon={<ListCheck className="w-4 h-4" />} label="Test Cases" />
           <NavLink to="/history" icon={<Clock className="w-4 h-4" />} label="History" />
           <NavLink to="/settings" icon={<Settings className="w-4 h-4" />} label="Settings" />
         </nav>
