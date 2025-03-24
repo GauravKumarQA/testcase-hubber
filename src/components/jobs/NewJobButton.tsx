@@ -10,16 +10,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Device, TestCase } from "@/utils/jobsData";
 
 interface NewJobButtonProps {
-  onJobCreated: (jobName: string) => void;
+  onJobCreated: (jobName: string, testCases: TestCase[], devices: Device[]) => void;
 }
 
 const NewJobButton = ({ onJobCreated }: NewJobButtonProps) => {
   const [open, setOpen] = useState(false);
 
-  const handleJobCreated = (jobName: string) => {
-    onJobCreated(jobName);
+  const handleJobCreated = (jobName: string, testCases: TestCase[], devices: Device[]) => {
+    onJobCreated(jobName, testCases, devices);
     setOpen(false);
   };
 
@@ -31,7 +32,7 @@ const NewJobButton = ({ onJobCreated }: NewJobButtonProps) => {
           New Test Job
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] glass-card border-0">
+      <DialogContent className="sm:max-w-[600px] glass-card border-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">Create New Test Job</DialogTitle>
         </DialogHeader>

@@ -1,5 +1,19 @@
-
 export type JobStatus = 'success' | 'failed' | 'running' | 'queued' | 'canceled';
+
+export interface TestCase {
+  id: string;
+  name: string;
+  description?: string;
+  enabled: boolean;
+}
+
+export interface Device {
+  id: string;
+  name: string;
+  type: 'mobile' | 'tablet' | 'desktop' | 'server';
+  os?: string;
+  selected: boolean;
+}
 
 export interface TestResult {
   id: string;
@@ -21,14 +35,78 @@ export interface TestJob {
   failedTests: number;
   skippedTests: number;
   testResults: TestResult[];
+  testCases?: TestCase[];
+  devices?: Device[];
 }
+
+// Predefined test cases
+export const predefinedTestCases: TestCase[] = [
+  { id: 'tc-1', name: 'User Authentication', description: 'Tests user login and registration flows', enabled: true },
+  { id: 'tc-2', name: 'API Integration', description: 'Tests REST API endpoints', enabled: true },
+  { id: 'tc-3', name: 'Data Validation', description: 'Tests input validation and error handling', enabled: true },
+  { id: 'tc-4', name: 'Performance Checks', description: 'Tests response times and resource usage', enabled: true },
+  { id: 'tc-5', name: 'UI Rendering', description: 'Tests component rendering across viewports', enabled: true },
+];
+
+// Predefined devices
+export const predefinedDevices: Device[] = [
+  { id: 'dev-1', name: 'Chrome Desktop', type: 'desktop', os: 'Windows/macOS', selected: true },
+  { id: 'dev-2', name: 'Firefox Desktop', type: 'desktop', os: 'Windows/macOS', selected: false },
+  { id: 'dev-3', name: 'iPhone 13', type: 'mobile', os: 'iOS 15', selected: true },
+  { id: 'dev-4', name: 'Pixel 6', type: 'mobile', os: 'Android 12', selected: false },
+  { id: 'dev-5', name: 'iPad Pro', type: 'tablet', os: 'iOS 15', selected: false },
+  { id: 'dev-6', name: 'Test Server', type: 'server', os: 'Linux', selected: true },
+];
+
+// Predefined job templates
+export const predefinedJobs: TestJob[] = [
+  {
+    id: 'template-1',
+    name: 'API Test Suite',
+    status: 'queued',
+    startTime: new Date().toISOString(),
+    testCount: 0,
+    passedTests: 0,
+    failedTests: 0,
+    skippedTests: 0,
+    testResults: [],
+    testCases: predefinedTestCases.filter(tc => tc.id === 'tc-2' || tc.id === 'tc-3'),
+    devices: predefinedDevices.filter(d => d.id === 'dev-6')
+  },
+  {
+    id: 'template-2',
+    name: 'Frontend Validation Suite',
+    status: 'queued',
+    startTime: new Date().toISOString(),
+    testCount: 0,
+    passedTests: 0,
+    failedTests: 0,
+    skippedTests: 0,
+    testResults: [],
+    testCases: predefinedTestCases.filter(tc => tc.id === 'tc-5'),
+    devices: predefinedDevices.filter(d => d.id === 'dev-1' || d.id === 'dev-3')
+  },
+  {
+    id: 'template-3',
+    name: 'Full Regression Suite',
+    status: 'queued',
+    startTime: new Date().toISOString(),
+    testCount: 0,
+    passedTests: 0,
+    failedTests: 0,
+    skippedTests: 0,
+    testResults: [],
+    testCases: predefinedTestCases,
+    devices: predefinedDevices.filter(d => d.selected)
+  }
+];
 
 // Generate a random unique ID
 export const generateId = (): string => {
   return Math.random().toString(36).substring(2, 12);
 };
 
-// Sample initial jobs data
+// Sample initial jobs data - now using different objects than predefined jobs
 export const initialJobs: TestJob[] = [
   {
     id: 'job-1',
@@ -92,7 +170,7 @@ export const initialJobs: TestJob[] = [
 ];
 
 // Simulate creating a new job
-export const createJob = (name: string): TestJob => {
+export const createJob = (name: string, selectedTestCases: TestCase[] = [], selectedDevices: Device[] = []): TestJob => {
   return {
     id: `job-${generateId()}`,
     name,
@@ -102,7 +180,9 @@ export const createJob = (name: string): TestJob => {
     passedTests: 0,
     failedTests: 0,
     skippedTests: 0,
-    testResults: []
+    testResults: [],
+    testCases: selectedTestCases,
+    devices: selectedDevices
   };
 };
 

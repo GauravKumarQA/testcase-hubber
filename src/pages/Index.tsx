@@ -2,14 +2,14 @@
 import { useState, useEffect } from "react";
 import { Search, Calculator } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { initialJobs, TestJob, createJob } from "@/utils/jobsData";
+import { predefinedJobs, TestJob, createJob, Device, TestCase } from "@/utils/jobsData";
 import JobCard from "@/components/jobs/JobCard";
 import NewJobButton from "@/components/jobs/NewJobButton";
 import Navbar from "@/components/layout/Navbar";
 import { toast } from "sonner";
 
 const Index = () => {
-  const [jobs, setJobs] = useState<TestJob[]>(initialJobs);
+  const [jobs, setJobs] = useState<TestJob[]>(predefinedJobs);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,12 +26,12 @@ const Index = () => {
     job.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleCreateJob = (jobName: string) => {
-    const newJob = createJob(jobName);
+  const handleCreateJob = (jobName: string, testCases: TestCase[], devices: Device[]) => {
+    const newJob = createJob(jobName, testCases, devices);
     setJobs(prevJobs => [newJob, ...prevJobs]);
     
     toast.success("New test job created", {
-      description: `Job "${jobName}" has been created and queued.`,
+      description: `Job "${jobName}" has been created with ${testCases.length} test cases on ${devices.length} devices.`,
     });
     
     // Simulate job state changes
@@ -45,7 +45,7 @@ const Index = () => {
       const success = Math.random() > 0.3;
       setJobs(prevJobs => prevJobs.map(job => {
         if (job.id === newJob.id) {
-          const testCount = Math.floor(Math.random() * 20) + 5;
+          const testCount = testCases.length * devices.length;
           const passedTests = success ? testCount : Math.floor(testCount * 0.7);
           const failedTests = testCount - passedTests;
           
@@ -76,9 +76,9 @@ const Index = () => {
       <main className="page-container page-transition animate-slide-in">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Test Jobs</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">Test Templates</h1>
             <p className="text-muted-foreground mt-1">
-              Manage and monitor your test execution jobs
+              Create and manage test job templates
             </p>
           </div>
           
@@ -88,7 +88,7 @@ const Index = () => {
         <div className="mb-8 relative">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search test jobs..."
+            placeholder="Search templates..."
             className="pl-9 bg-background border-input/80 focus-visible:ring-primary/20"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -112,11 +112,11 @@ const Index = () => {
             <div className="bg-secondary/60 w-16 h-16 rounded-full flex items-center justify-center mb-4">
               <Calculator className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-medium mb-1">No test jobs found</h3>
+            <h3 className="text-lg font-medium mb-1">No templates found</h3>
             <p className="text-muted-foreground max-w-md">
               {searchTerm 
-                ? `No jobs matching "${searchTerm}" were found. Try a different search term.` 
-                : "You haven't created any test jobs yet. Create a new job to get started."}
+                ? `No templates matching "${searchTerm}" were found. Try a different search term.` 
+                : "You haven't created any test templates yet. Create a new job to get started."}
             </p>
           </div>
         )}
